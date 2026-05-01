@@ -104,6 +104,8 @@ DATABASES = {
     'default': env.db(), 
 }
 
+DATABASES["default"]["ENGINE"] = "django.contrib.gis.db.backends.postgis"
+
 
 # DATABASES = {
 #     'default': {
