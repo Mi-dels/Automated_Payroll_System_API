@@ -1,0 +1,10 @@
+venv/
+.env
+db.slite3
+media/
+staticfiles/
+__pycache__/
+*.py[cod]
+Thumbs.db
+.vscode/
+*.log

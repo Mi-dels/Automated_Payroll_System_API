@@ -1,0 +1,42 @@
+{% extends "admin/change_form.html" %} {% block extrahead %} {{ block.super }}
+<!-- Load Search Bar Assets -->
+<link rel="stylesheet" href="https://unpkg.com" />
+<script src="https://unpkg.com"></script>
+
+<script type="text/javascript">
+  window.addEventListener(
+    "map:init",
+    function (e) {
+      var map = e.detail.map;
+
+      // Add Search Box
+      L.Control.geocoder({
+        defaultMarkGeocode: false,
+        placeholder: "SEARCH ADDRESS HERE",
+        collapsed: false,
+      })
+        .on("markgeocode", function (e) {
+          var latlng = e.geocode.center;
+          map.setView(latlng, 17);
+          // This updates your PostGIS PointField
+          map.fireEvent("click", {
+            latlng: latlng,
+            layerPoint: map.latLngToLayerPoint(latlng),
+            containerPoint: map.latLngToContainerPoint(latlng),
+          });
+        })
+        .addTo(map);
+    },
+    false,
+  );
+</script>
+
+<style>
+  /* This makes the search bar stand out so you can't miss it */
+  .leaflet-control-geocoder {
+    background: #fff;
+    border: 2px solid red !important;
+    margin-top: 10px !important;
+  }
+</style>
+{% endblock %}
