@@ -14,7 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import environ
 import os
-
+env = environ.Env()
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,9 +28,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-cxr!ks)vl=5yb7jathp(_ebjlgh#(4-vyf=l5ke=jdxkcx_4)g'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG", default=False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -96,7 +96,7 @@ WSGI_APPLICATION = 'automated_payroll_system.wsgi.application'
 
 
 
-env = environ.Env()
+
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 DATABASES = {
