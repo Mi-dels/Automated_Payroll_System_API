@@ -249,13 +249,42 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
+# SPECTACULAR_SETTINGS = {
+#     "TITLE": "Payroll API",
+#     "DESCRIPTION": "HR + Payroll System API",
+#     "VERSION": "1.0.0",
+#     "SERVE_INCLUDE_SCHEMA": False,
+# }
+
 SPECTACULAR_SETTINGS = {
     "TITLE": "Payroll API",
-    "DESCRIPTION": "HR + Payroll System API",
-    "VERSION": "1.0.0",
-    "SERVE_INCLUDE_SCHEMA": False,
-}
 
+    "DESCRIPTION": "HR + Payroll System API",
+
+    "VERSION": "1.0.0",
+
+    "SERVE_INCLUDE_SCHEMA": False,
+
+    "SWAGGER_UI_SETTINGS": {
+        "persistAuthorization": True,
+    },
+
+    "SECURITY": [
+        {
+            "BearerAuth": []
+        }
+    ],
+
+    "COMPONENTS": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+            }
+        }
+    },
+}
 
 # REST_FRAMEWORK = {
 #     "DEFAULT_AUTHENTICATION_CLASSES": (
