@@ -234,7 +234,6 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
 
         # DRF Browser Login
-        "rest_framework.authentication.SessionAuthentication",
 
         # JWT
         "rest_framework_simplejwt.authentication.JWTAuthentication",
