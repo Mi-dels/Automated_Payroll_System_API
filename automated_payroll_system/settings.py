@@ -229,7 +229,14 @@ LEAFLET_CONFIG = {
 FLUTTERWAVE_SECRET_KEY = os.getenv("FLUTTERWAVE_SECRET_KEY")
 
 
-REST_FRAMEWORK = {
+REST_FRAMEWORK = { 
+    
+    
+     "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.AllowAny",
+    ),
+
+
 
     "DEFAULT_AUTHENTICATION_CLASSES": (
 
@@ -239,11 +246,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
 
-    "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.AllowAny",
-    ),
-
-
+  
 
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
