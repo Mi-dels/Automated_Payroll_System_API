@@ -274,16 +274,63 @@ SPECTACULAR_SETTINGS = {
         }
     ],
 
-    "COMPONENTS": {
-        "securitySchemes": {
-            "BearerAuth": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT",
-            }
-        }
-    },
+    "COMPONENT_SPLIT_REQUEST": True,
 }
+
+
+from drf_spectacular.extensions import (
+    OpenApiAuthenticationExtension
+)
+
+class BearerScheme(OpenApiAuthenticationExtension):
+
+    target_class = (
+        "rest_framework_simplejwt.authentication.JWTAuthentication"
+    )
+
+    name = "BearerAuth"
+
+    def get_security_definition(self, auto_schema):
+
+        return {
+
+
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT",
+        }
+
+
+
+# SPECTACULAR_SETTINGS = {
+#     "TITLE": "Payroll API",
+
+#     "DESCRIPTION": "HR + Payroll System API",
+
+#     "VERSION": "1.0.0",
+
+#     "SERVE_INCLUDE_SCHEMA": False,
+
+#     "SWAGGER_UI_SETTINGS": {
+#         "persistAuthorization": True,
+#     },
+
+#     "SECURITY": [
+#         {
+#             "BearerAuth": []
+#         }
+#     ],
+
+#     "COMPONENTS": {
+#         "securitySchemes": {
+#             "BearerAuth": {
+#                 "type": "http",
+#                 "scheme": "bearer",
+#                 "bearerFormat": "JWT",
+#             }
+#         }
+#     },
+# }
 
 # REST_FRAMEWORK = {
 #     "DEFAULT_AUTHENTICATION_CLASSES": (
