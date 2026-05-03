@@ -321,7 +321,7 @@ SPECTACULAR_SETTINGS = {
     
     "COMPONENT_SPLIT_REQUEST": True,
     
-    "SECURITY_SCHEMES": {
+    "SECURITY_DEFINITIONS": {
         "BearerAuth": {
            "type": "http",
            "scheme": "bearer",
