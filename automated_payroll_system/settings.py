@@ -302,35 +302,31 @@ class BearerScheme(OpenApiAuthenticationExtension):
 
 
 
-# SPECTACULAR_SETTINGS = {
-#     "TITLE": "Payroll API",
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Payroll API",
 
-#     "DESCRIPTION": "HR + Payroll System API",
+    "DESCRIPTION": "HR + Payroll System API",
 
-#     "VERSION": "1.0.0",
+    "VERSION": "1.0.0",
 
-#     "SERVE_INCLUDE_SCHEMA": False,
+    "SERVE_INCLUDE_SCHEMA": False,
 
-#     "SWAGGER_UI_SETTINGS": {
-#         "persistAuthorization": True,
-#     },
+    "SWAGGER_UI_SETTINGS": {
+        "persistAuthorization": True,
+    },
 
-#     "SECURITY": [
-#         {
-#             "BearerAuth": []
-#         }
-#     ],
-
-#     "COMPONENTS": {
-#         "securitySchemes": {
-#             "BearerAuth": {
-#                 "type": "http",
-#                 "scheme": "bearer",
-#                 "bearerFormat": "JWT",
-#             }
-#         }
-#     },
-# }
+    
+    "COMPONENT_SPLIT_REQUEST": True,
+    
+    "SECURITY_SCHEMES": {
+        "BearerAuth": {
+           "type": "http",
+           "scheme": "bearer",
+           "bearerFormat": "JWT",
+        }
+    },
+    
+}
 
 # REST_FRAMEWORK = {
 #     "DEFAULT_AUTHENTICATION_CLASSES": (
