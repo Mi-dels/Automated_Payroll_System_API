@@ -8,7 +8,9 @@ from payroll.permissions import IsHR
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import EmployeePreRecord
-
+from rest_framework.permissions import (
+    IsAuthenticated
+)
 
 class AccessPermission(permissions.BasePermission):
     message = 'Only HR are allowed.'
@@ -27,7 +29,7 @@ class HRMasterRecordViewSet(viewsets.ModelViewSet):
     """
     Only HR can access this to pre-fill employee details.
     """
-    permission_classes = [AccessPermission]
+    permission_classes = [IsAuthenticated, AccessPermission]
     queryset = EmployeePreRecord.objects.all()
     serializer_class = EmployeePreRecordSerializer
 
@@ -35,6 +37,7 @@ class HRMasterRecordViewSet(viewsets.ModelViewSet):
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
     
     def get_queryset(self):
@@ -82,7 +85,7 @@ from payroll.models import Salary, PayrollPeriod
 
 
 class EmployeePayrollViewSet(viewsets.ViewSet):
-
+    permission_classes = [IsAuthenticated]
     # =========================
     # MY SALARY
     # =========================
@@ -284,6 +287,7 @@ from payroll.services.payslip import (
 
 class HRPayrollsViewSet(viewsets.ViewSet):
     permission_classes = [
+        IsAuthenticated,
         IsHR
     ]
     # =========================

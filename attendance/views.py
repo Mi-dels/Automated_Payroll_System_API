@@ -4,7 +4,9 @@ from rest_framework.response import Response
 from django.contrib.gis.geos import Point
 from attendance.models import Attendance
 from attendance.serializers import AttendanceSerializer, ClockInSerializer, ClockOutSerializer
-
+from rest_framework.permissions import (
+    IsAuthenticated
+)
 from attendance.services.clock_in import process_clock_in
 from attendance.services.clock_out import process_clock_out
 from attendance.services.gps import get_workspace_from_location
@@ -31,9 +33,10 @@ class AttendanceViewSet(viewsets.ReadOnlyModelViewSet):
     READ = attendance history (HR + user filtered)
     WRITE = clock-in / clock-out via custom actions
     """
+    permission_classes = [ IsAuthenticated,IsHROrOwner]
     queryset = Attendance.objects.all()
     serializer_class = AttendanceSerializer
-    permission_classes = [IsHROrOwner]
+    
 
     def get_queryset(self):
         user = self.request.user
@@ -132,9 +135,10 @@ from attendance.serializers import WorkspaceSerializer
 
 
 class WorkspaceViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsHROrOwner ]
     queryset = Workspace.objects.all()
     serializer_class = WorkspaceSerializer
-    # permission_classes = [IsAuthenticated]
+    
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -157,6 +161,7 @@ from attendance.serializers import ShiftSerializer
 
 
 class ShiftViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsHROrOwner ]
     queryset = Shift.objects.all()
     serializer_class = ShiftSerializer
 
