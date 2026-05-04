@@ -76,7 +76,7 @@ class User(AbstractUser):
     emergency_contact = models.CharField(null=True, max_length=50)
     tax_id = models.CharField(max_length=50, unique=True, null=True)
     bank_account_number = models.CharField( max_length=50, null=True, unique=True)
-    # bank_code = models.CharField(max_length=3, help_text="e.g., 057 for Zenith, 999992 for OPay")
+    bank_code = models.CharField(max_length=10, null=True, blank=True, help_text="e.g., 057 for Zenith, 999992 for OPay")
     paystack_recipient_code = models.CharField(max_length=50, blank=True, null=True)
 
     hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
