@@ -26,7 +26,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-
+from payroll.views import flutterwave_webhook
 
 
 
@@ -55,4 +55,5 @@ urlpatterns = [
     path('api/', include('payroll.urls')),
     path('api/', include('attendance.urls')),
     path('api/', include('authentication.urls')),
+    path("api/payroll/flutterwave/webhook/", flutterwave_webhook, name="flutterwave-webhook"),
 ]

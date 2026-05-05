@@ -439,7 +439,83 @@ class HRPayrollsViewSet(viewsets.ViewSet):
 
 
 
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+import hmac
+import hashlib
+from django.conf import settings
 
+@extend_schema(exclude=True)
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def flutterwave_webhook(request):
+    secret_hash = settings.FLUTTERWAVE_SECRET_HASH
+    signature = request.headers.get("verif-hash")
+
+    if not signature or not hmac.compare_digest(
+        hashlib.sha256(secret_hash.encode()).hexdigest(),
+        hashlib.sha256(signature.encode()).hexdigest()
+    ):
+        return Response({"error": "Invalid signature"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    payload = request.data
+    event = payload.get("event")
+
+    if event == "transfer.completed":
+        reference = payload["data"]["reference"]
+        transfer_status = payload["data"]["status"]
+
+        try:
+            salary = Salary.objects.get(transaction_reference=reference)
+            if transfer_status == "SUCCESSFUL":
+                salary.payment_status = "PAID"
+                salary.is_paid = True
+                salary.paid_at = timezone.now()
+                salary.save()
+            elif transfer_status == "FAILED":
+                salary.payment_status = "APPROVED"
+                salary.is_paid = False
+                salary.save()
+        except Salary.DoesNotExist:
+            pass
+
+    return Response({"status": "ok"}, status=status.HTTP_200_OK)
+
+
+
+
+# @extend_schema(exclude=True)
+# @api_view(["POST"])
+# @permission_classes([AllowAny])
+# def flutterwave_webhook(request):
+#     secret_hash = settings.FLUTTERWAVE_SECRET_HASH
+#     signature = request.headers.get("verif-hash")
+
+#     if signature != secret_hash:
+#         return Response({"error": "Invalid signature"}, status=status.HTTP_401_UNAUTHORIZED)
+
+#     payload = request.data
+#     event = payload.get("event")
+
+#     if event == "transfer.completed":
+#         reference = payload["data"]["reference"]
+#         transfer_status = payload["data"]["status"]
+
+#         try:
+#             salary = Salary.objects.get(transaction_reference=reference)
+#             if transfer_status == "SUCCESSFUL":
+#                 salary.payment_status = "PAID"
+#                 salary.is_paid = True
+#                 salary.paid_at = timezone.now()
+#                 salary.save()
+#             elif transfer_status == "FAILED":
+#                 salary.payment_status = "APPROVED"
+#                 salary.is_paid = False
+#                 salary.save()
+#         except Salary.DoesNotExist:
+#             pass
+
+#     return Response({"status": "ok"}, status=status.HTTP_200_OK)
 
 
 
