@@ -74,7 +74,7 @@ class UserSerializer(serializers.ModelSerializer):
             'id', 'username', 'employee_id', 
             'department', 'job_title', 'employment_status', 'is_hr',# Official HR data (Read-only)
             'phone_number', 'address', 'password', 'emergency_contact', 'date_of_birth', 
-             'tax_id', 'bank_account_number'     # Personal data (Editable)
+              'bank_account_number' , 'bank_code'   # Personal data (Editable)
         ]
         extra_kwargs = {'password': {'write_only': True}}
 
