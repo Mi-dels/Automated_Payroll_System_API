@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
+from drf_spectacular.utils import extend_schema
 
 from .serializers import (
     RegisterSerializer,
@@ -14,9 +15,9 @@ from .serializers import (
 
 class AuthViewSet(viewsets.ViewSet):
 
-    # =========================
+   
     # REGISTER
-    # =========================
+    @extend_schema(request=RegisterSerializer)
     @action(detail=False, methods=["post"], permission_classes=[AllowAny])
     def register(self, request):
         serializer = RegisterSerializer(data=request.data)
@@ -29,9 +30,9 @@ class AuthViewSet(viewsets.ViewSet):
         })
 
 
-    # =========================
+  
     # LOGIN
-    # =========================
+    @extend_schema(request=LoginSerializer)
     @action(detail=False, methods=["post"], permission_classes=[AllowAny])
     def login(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -40,9 +41,9 @@ class AuthViewSet(viewsets.ViewSet):
         return Response(serializer.validated_data)
 
 
-    # =========================
+
     # PROFILE
-    # =========================
+    @extend_schema(request=ProfileSerializer)
     @action(
         detail=False,
         methods=["get"],
@@ -53,9 +54,9 @@ class AuthViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-    # =========================
+    
     # LOGOUT
-    # =========================
+    
     @action(
         detail=False,
         methods=["post"],

@@ -25,14 +25,14 @@ def process_clock_in(user, workspace, location):
 
     local_now = timezone.localtime()
 
-    # ---------------- GEO FENCE ----------------
+    # GEO FENCE 
     # GeoDjango distance returns degrees → convert to meters approx
     distance = workspace.location.distance(location) * 100000
 
     if distance > workspace.radius_meters:
         raise ValidationError("You are outside the workspace area.")
 
-    # ---------------- SHIFT LOGIC ----------------
+    # SHIFT LOGIC 
     shift_start = local_now.replace(
         hour=shift.start_time.hour,
         minute=shift.start_time.minute,
@@ -52,7 +52,7 @@ def process_clock_in(user, workspace, location):
     else:
         status = AttendanceStatus.LATE
 
-    # ---------------- SUSPICIOUS CHECK ----------------
+    # SUSPICIOUS CHECK
     last_attendance = Attendance.objects.filter(
         employee=user,
         clock_in_time__isnull=False,
@@ -71,7 +71,7 @@ def process_clock_in(user, workspace, location):
                 time_diff_hours=time_diff
             )
 
-    # ---------------- RETURN CLEAN DATA ----------------
+    # RETURN CLEAN DATA 
     return {
         "employee": user,
         "workspace": workspace,

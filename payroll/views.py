@@ -319,6 +319,7 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
 
+
     def get_queryset(self):
         user = self.request.user
         if not user.is_authenticated:
@@ -326,6 +327,33 @@ class UserViewSet(viewsets.ModelViewSet):
         if user.is_hr:
             return User.objects.all()
         return User.objects.filter(id=user.id)
+
+    def create(self, request, *args, **kwargs):
+        return Response(
+            {"error": "Use /api/auth/register/ to create an account"},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
+
+    @extend_schema(request=UserSerializer)
+    @action(detail=False, methods=["patch"], url_path="me")
+    def me(self, request):
+        serializer = UserSerializer(
+            request.user,
+            data=request.data,
+            partial=True,
+            context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     if not user.is_authenticated:
+    #         return User.objects.none()
+    #     if user.is_hr:
+    #         return User.objects.all()
+    #     return User.objects.filter(id=user.id)
 
 class IsHRorSelf(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):

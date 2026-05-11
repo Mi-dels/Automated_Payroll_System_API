@@ -14,7 +14,7 @@ def process_clock_out(user, lat, lon):
     local_now = timezone.localtime()
     location = Point(lon, lat, srid=4326)
 
-    # ---------------- FIND ACTIVE RECORD ----------------
+    # FIND ACTIVE RECORD 
     attendance = Attendance.objects.filter(
         employee=user,
         clock_in_time__date=local_now.date(),
@@ -24,13 +24,13 @@ def process_clock_out(user, lat, lon):
     if not attendance:
         raise ValidationError("No active clock-in found.")
 
-    # ---------------- SHIFT CHECK ----------------
+    #  SHIFT CHECK 
     shift = attendance.shift
 
     if not shift:
         raise ValidationError("Shift not found for this attendance.")
 
-    # ---------------- TIME CALCULATION ----------------
+    # TIME CALCULATION 
     duration = local_now - attendance.clock_in_time
     total_hours = duration.total_seconds() / 3600
 
@@ -41,14 +41,14 @@ def process_clock_out(user, lat, lon):
 
     overtime_hours = max(0, total_hours - shift_hours)
 
-    # ---------------- UPDATE ATTENDANCE ----------------
+    #  UPDATE ATTENDANCE 
     attendance.clock_out_time = local_now
     attendance.clock_out_location = location
     attendance.overtime_hours = round(overtime_hours, 2)
 
     attendance.save()
 
-    # ---------------- RETURN ----------------
+    #  RETURN 
     return {
         "attendance": attendance,
         "total_hours": attendance.total_hours,  # computed property
