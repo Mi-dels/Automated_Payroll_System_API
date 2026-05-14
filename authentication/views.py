@@ -17,7 +17,7 @@ class AuthViewSet(viewsets.ViewSet):
 
    
     # REGISTER
-    @extend_schema(request=RegisterSerializer)
+    @extend_schema(security=[], request=RegisterSerializer)
     @action(detail=False, methods=["post"], permission_classes=[AllowAny])
     def register(self, request):
         serializer = RegisterSerializer(data=request.data)
@@ -32,7 +32,7 @@ class AuthViewSet(viewsets.ViewSet):
 
   
     # LOGIN
-    @extend_schema(request=LoginSerializer)
+    @extend_schema(security=[], request=LoginSerializer)
     @action(detail=False, methods=["post"], permission_classes=[AllowAny])
     def login(self, request):
         serializer = LoginSerializer(data=request.data)
