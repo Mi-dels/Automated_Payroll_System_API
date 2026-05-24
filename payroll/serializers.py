@@ -107,7 +107,7 @@ class UserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
 
         if not request_user.is_hr:
-            protected_fields = ['employee_id', 'department', 'job_title', 'employment_status', 'is_hr']
+            protected_fields = [ 'department', 'job_title', 'employment_status', 'is_hr']
             for field in protected_fields:
                 validated_data.pop(field, None)
 
