@@ -102,7 +102,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         password = validated_data.pop('password', None)
         if password:
-            from django.contrib.auth.hashers import check password
+            from django.contrib.auth.hashers import check_password
         if not check_password(password, instance.password):
             instance.set_password(password)
 
