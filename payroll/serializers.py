@@ -110,7 +110,7 @@ class UserSerializer(serializers.ModelSerializer):
                 validated_data.pop(field, None)
 
         for attr, value in validated_data.items():
-        setattr(instance, attr, value)
+            setattr(instance, attr, value)
 
         instance.save()
         return instance
