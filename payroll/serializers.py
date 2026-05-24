@@ -99,11 +99,22 @@ class UserSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         request_user = self.context['request'].user
+
+        password = validated_data.pop('password', None)
+        if password:
+            instance.set_password(password)
+
         if not request_user.is_hr:
             protected_fields = ['employee_id', 'department', 'job_title', 'employment_status', 'is_hr']
             for field in protected_fields:
                 validated_data.pop(field, None)
-        return super().update(instance, validated_data)
+
+        for attr, value in validated_data.items():
+        setattr(instance, attr, value)
+
+        instance.save()
+        return instance
+        # return super().update(instance, validated_data)
     
 
 
