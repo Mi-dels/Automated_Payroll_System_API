@@ -7,7 +7,7 @@ def get_active_shift(workspace):
     """
     now = timezone.localtime()
 
-    buffer_minutes = 10
+    buffer_minutes = 30
 
     
     for shift in workspace.shifts.all():

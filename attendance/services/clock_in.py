@@ -4,6 +4,7 @@ from rest_framework.exceptions import ValidationError
 from attendance.models import Attendance
 from attendance.constant import AttendanceStatus
 from attendance.services.gps import is_suspicious_movement
+from attendance.services.shift_selector import get_active_shift
 
 
 def process_clock_in(user, workspace, location):
@@ -18,19 +19,23 @@ def process_clock_in(user, workspace, location):
         raise ValidationError("No shift assigned to this workspace.")
 
     # pick first shift (you can improve later)
-    shift = workspace.shifts.first()
+    # shift = workspace.shifts.first()
 
-    print("Workspace ID:", workspace.id)
-    print("Workspace shifts:", workspace.shifts.all())
+    shift = get_active_shift(workspace)
+    if not shift:
+        raise ValidationError("No active shift at this time. Please check your shift schedule.")
+
+    # print("Workspace ID:", workspace.id)
+    # print("Workspace shifts:", workspace.shifts.all())
 
     local_now = timezone.localtime()
 
     # GEO FENCE 
     # GeoDjango distance returns degrees → convert to meters approx
-    distance = workspace.location.distance(location) * 100000
+    # distance = workspace.location.distance(location) * 100000
 
-    if distance > workspace.radius_meters:
-        raise ValidationError("You are outside the workspace area.")
+    # if distance > workspace.radius_meters:
+    #     raise ValidationError("You are outside the workspace area.")
 
     # SHIFT LOGIC 
     shift_start = local_now.replace(

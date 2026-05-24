@@ -8,14 +8,15 @@ def get_payslip_data(employee, period):
     )
 
     return {
-        "employee": salary.employee,
+        "employee_name": salary.employee.username,
+        "employee_email": salary.employee.email,
         "period": str(salary.period),
-        "total_hours": salary.total_hours,
-        "overtime_hours": salary.overtime_hours,
-        "late_instances": salary.late_instances_count,
-        "gross_pay": salary.gross_earnings,
-        "deductions": salary.lateness_deduction,
-        "net_pay": salary.net_pay,
+        "total_hours": float(salary.total_hours or 0),
+        "overtime_hours": float(salary.overtime_hours or 0),
+        "late_instances": float(salary.late_instances_count or 0),
+        "gross_pay": float(salary.gross_earnings or 0),
+        "deductions": float(salary.lateness_deduction or 0),
+        "net_pay": float(salary.net_pay or 0),
     }
 
 
@@ -35,8 +36,8 @@ def export_all_payslips(period):
         results.append({
             "employee_id": salary.employee.id,
             "employee_name": salary.employee.username,
-            "gross_earnings": salary.gross_earnings,
-            "net_pay": salary.net_pay,
+            "gross_earnings": float(salary.gross_earnings or 0),
+            "net_pay": float(salary.net_pay or 0),
             "payment_status": salary.payment_status
         })
 

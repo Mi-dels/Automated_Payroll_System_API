@@ -119,8 +119,9 @@ class PayrollPeriod(models.Model):
 
 
 class PayrollConfiguration(models.Model):
-    late_penalty_flat_rate = models.DecimalField(max_digits=10, decimal_places=2, default=500.00)
-    overtime_rate_multiplier = models.FloatField(default=1.5)
+    default_hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, default=2000.00, help_text="Default hourly rate for all employees.")
+    late_penalty_per_minute = models.DecimalField(max_digits=10, decimal_places=2, default=5.00, help_text="Amount deducted per minute of lateness.")
+    overtime_rate_multiplier = models.FloatField(default=3.00, help_text="Multipier for overtime hours.")
 
     class Meta:
         verbose_name = "Payroll Configuration"

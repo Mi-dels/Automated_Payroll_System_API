@@ -41,6 +41,15 @@ def process_clock_out(user, lat, lon):
 
     overtime_hours = max(0, total_hours - shift_hours)
 
+    # DETERMINE EXIT STATUS 
+
+    if total_hours < shift_hours:
+        exit_status = "EARLY LEAVE"
+    elif overtime_hours > 0:
+        exit_status = "OVERTIME"
+    else:
+        exit_status = "COMPLETED"
+
     #  UPDATE ATTENDANCE 
     attendance.clock_out_time = local_now
     attendance.clock_out_location = location
@@ -52,7 +61,8 @@ def process_clock_out(user, lat, lon):
     return {
         "attendance": attendance,
         "total_hours": attendance.total_hours,  # computed property
-        "overtime_hours": attendance.overtime_hours
+        "overtime_hours": attendance.overtime_hours,
+        "exit_status": exit_status
     }
 
 

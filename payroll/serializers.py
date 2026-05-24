@@ -1,6 +1,14 @@
 # payroll/serializers.py
-from rest_framework import serializers, permissions, viewsets
+from rest_framework import serializers, permissions
 from .models import User, EmployeePreRecord, Department, JobTitle, EmploymentStatus
+from payroll.models import PayrollPeriod, PayrollConfiguration, Salary
+from django.contrib.auth import get_user_model
+
+
+
+
+User = get_user_model()
+
 
 # 1. THE LOOKUP SERIALIZERS (Allows HR to "Add New")
 class DepartmentSerializer(serializers.ModelSerializer):
@@ -42,24 +50,7 @@ class EmployeePreRecordSerializer(serializers.ModelSerializer):
        
         return EmployeePreRecord.objects.create(department=dept, job_title=job, employment_status=status, **validated_data)
 
-# 3. THE STAFF SERIALIZER (The one you sent - handles Auto-fill & Locking)
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ['id', 'username', 'employee_id', 'department', 'job_title', 'employment_status', 'is_hr', 'password']
-#         extra_kwargs = {'password': {'write_only': True}}
 
-#     def create(self, validated_data):
-#         emp_id = validated_data.get('employee_id')
-#         try:
-#             hr_record = EmployeePreRecord.objects.get(employee_id=emp_id)
-#             validated_data['department.name'] = hr_record.department
-#             validated_data['job_title.name'] = hr_record.job_title
-#             validated_data['employment_status.name'] = hr_record.employment_status
-#             validated_data['is_hr'] = hr_record.is_hr
-#         except EmployeePreRecord.DoesNotExist:
-#             raise serializers.ValidationError({"employee_id": "That ID doesn't exist in our HR records."})
-#         return super().create(validated_data)
 
 class UserSerializer(serializers.ModelSerializer):
     # These "pull" the data from the linked HR record for display only
@@ -78,17 +69,32 @@ class UserSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {'password': {'write_only': True}}
 
-    def create(self, validated_data):
-        emp_id = validated_data.get('employee_id')
-        try:
-            # Connect the user to their official HR data using the ID
-            hr_data = EmployeePreRecord.objects.get(employee_id=emp_id)
-            validated_data['hr_profile'] = hr_data
-            validated_data['is_hr'] = hr_data.is_hr
-        except EmployeePreRecord.DoesNotExist:
-            raise serializers.ValidationError({"employee_id": "Invalid ID."})
+
+    def validate_employee_id(self, value):
+        if not value:
+            return value
+        if not EmployeePreRecord.objects.filter(employee_id=value).exists():
+            raise serializers.ValidationError(
+                "This employee ID does not exist in HR records"
+            )
+        request = self.context.get('request')
+        if request and User.objects.filter(employee_id=value).exclude(id=request.user.id).exists():
+            raise serializers.ValidationError(
+                "This employee ID is already taken"
+            )
+        return value
+
+    # def create(self, validated_data):
+    #     emp_id = validated_data.get('employee_id')
+    #     try:
+    #         # Connect the user to their official HR data using the ID
+    #         hr_data = EmployeePreRecord.objects.get(employee_id=emp_id)
+    #         validated_data['hr_profile'] = hr_data
+    #         validated_data['is_hr'] = hr_data.is_hr
+    #     except EmployeePreRecord.DoesNotExist:
+    #         raise serializers.ValidationError({"employee_id": "Invalid ID."})
             
-        return super().create(validated_data)
+    #     return super().create(validated_data)
 
 
     def update(self, instance, validated_data):
@@ -102,72 +108,83 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 
+class PayrollPeriodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PayrollPeriod
+        fields = ["id", "month", "is_closed"]
 
 
-from payroll.models import PayrollPeriod
-from django.contrib.auth import get_user_model
+class PayrollConfigurationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PayrollConfiguration
+        fields = ["id", "default_hourly_rate", "default_late_penalty_per_minute", "default_overtime_rate_multiplier"]
 
-User = get_user_model()
+
 
 
 class HRPayrollActionSerializer(serializers.Serializer):
 
-    ACTION_CHOICES = (
-        ("generate_payslip", "Generate Payslip"),
-        ("send_email", "Send Payslip Email"),
-        ("bulk_export", "Bulk Export"),
-    )
+    employee_id = serializers.IntegerField()
+    year = serializers.IntegerField()
+    month = serializers.IntegerField()
 
-    action = serializers.ChoiceField(choices=ACTION_CHOICES)
-
-    # HR-friendly input (NOT IDs)
-    employee_email = serializers.EmailField(required=False)
-    employee_name = serializers.CharField(required=False)
-
-    month = serializers.DateField(required=True)  # e.g. 2026-04-01
-
-    format = serializers.ChoiceField(
-        choices=(("pdf", "PDF"), ("json", "JSON")),
-        default="pdf"
-    )
-
-    def validate(self, data):
-        action = data["action"]
-
-        # ---------------- PERIOD RESOLUTION ----------------
-        period, _ = PayrollPeriod.objects.get_or_create(
-            month=data["month"]
-        )
-        data["period"] = period
-
-        # ---------------- EMPLOYEE RESOLUTION ----------------
-        email = data.get("employee_email")
-        name = data.get("employee_name")
-
-        if action in ["generate_payslip", "send_email"]:
-
-            if not email and not name:
-                raise serializers.ValidationError(
-                    "Provide employee_email or employee_name"
-                )
-
-            try:
-                if email:
-                    user = User.objects.get(email=email)
-                else:
-                    user = User.objects.get(username=name)
-
-            except User.DoesNotExist:
-                raise serializers.ValidationError("Employee not found")
-
-            data["employee"] = user
-
-        return data
+    
 
 
-from rest_framework import serializers
+    # ACTION_CHOICES = (
+    #     ("generate_payslip", "Generate Payslip"),
+    #     ("send_email", "Send Payslip Email"),
+    #     ("bulk_export", "Bulk Export"),
+    # )
 
-from payroll.models import Salary, PayrollPeriod
+    # action = serializers.ChoiceField(choices=ACTION_CHOICES)
+
+    # # HR-friendly input (NOT IDs)
+    # employee_email = serializers.EmailField(required=False)
+    # employee_name = serializers.CharField(required=False)
+
+    # month = serializers.DateField(required=True)  # e.g. 2026-04-01
+
+    # format = serializers.ChoiceField(
+    #     choices=(("pdf", "PDF"), ("json", "JSON")),
+    #     default="pdf"
+    # )
+
+    # def validate(self, data):
+    #     action = data["action"]
+
+    #     # ---------------- PERIOD RESOLUTION ----------------
+    #     period, _ = PayrollPeriod.objects.get_or_create(
+    #         month=data["month"]
+    #     )
+    #     data["period"] = period
+
+    #     # ---------------- EMPLOYEE RESOLUTION ----------------
+    #     email = data.get("employee_email")
+    #     name = data.get("employee_name")
+
+    #     if action in ["generate_payslip", "send_email"]:
+
+    #         if not email and not name:
+    #             raise serializers.ValidationError(
+    #                 "Provide employee_email or employee_name"
+    #             )
+
+    #         try:
+    #             if email:
+    #                 user = User.objects.get(email=email)
+    #             else:
+    #                 user = User.objects.get(username=name)
+
+    #         except User.DoesNotExist:
+    #             raise serializers.ValidationError("Employee not found")
+
+    #         data["employee"] = user
+
+    #     return data
+
+
+
 
 
 class SalaryApprovalSerializer(serializers.Serializer):
@@ -188,10 +205,10 @@ class BulkPaymentSerializer(serializers.Serializer):
 
     period_id = serializers.IntegerField()
 
-    transaction_prefix = serializers.CharField(
-        required=False,
-        default="BULK"
-    )
+    # transaction_prefix = serializers.CharField(
+    #     required=False,
+    #     default="BULK"
+    # )
 
 
 
@@ -202,84 +219,3 @@ class BulkPaymentSerializer(serializers.Serializer):
 
 
 
-# # serializers.py
-# class EmployeePreRecordSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = EmployeePreRecord
-#         fields = '__all__'
-
-
-
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ['id', 'username', 'employee_id', 'department', 'job_title', 'employment_status', 'is_hr', 'password']
-#         extra_kwargs = {'password': {'write_only': True}}
-
-#     def create(self, validated_data):
-#         emp_id = validated_data.get('employee_id')
-
-#         # 1. Look up the HR-filled data
-#         try:
-#             hr_record = EmployeePreRecord.objects.get(employee_id=emp_id)
-#             # 2. Force these fields to match the HR record
-#             validated_data['department.name'] = hr_record.department
-#             validated_data['job_title.title'] = hr_record.job_title
-#             validated_data['employment_status.name'] = hr_record.employment_status
-#             validated_data['is_hr'] = hr_record.is_hr
-#         except EmployeePreRecord.DoesNotExist:
-#             raise serializers.ValidationError({"employee_id": "That ID doesn't exist in our HR records."})
-
-#         return super().create(validated_data)
-
-#     def update(self, instance, validated_data):
-#         request_user = self.context['request'].user
-        
-#         # 3. Security: If the user is NOT HR, remove protected fields from the update
-#         if not request_user.is_hr:
-#             protected_fields = ['employee_id', 'department', 'job_title', 'employment_status', 'is_hr']
-#             for field in protected_fields:
-#                 validated_data.pop(field, None) # Silently ignore changes to these fields
-        
-#         return super().update(instance, validated_data)
-
-
-
-# class EmployeePreRecordSerializer(serializers.ModelSerializer):
-
-
-# class UserSerializer(serializers.ModelSerializer):
-#     # We "pull in" the string names of these foreign keys 
-#     # so the frontend sees "IT" instead of just an ID number like "1"
-#     department_name = serializers.ReadOnlyField(source='department.name')
-#     job_title_name = serializers.ReadOnlyField(source='job_title.title')
-#     status_name = serializers.ReadOnlyField(source='employment_status.name')
-
-#     class Meta:
-#         model = User
-#         # List the fields you want to send to the frontend
-#         fields = [
-#             'id', 'username', 'first_name', 'last_name', 'email',
-#             'employee_id', 'phone_number', 'department', 'department_name',
-#             'job_title', 'job_title_name', 'employment_status', 'status_name',
-#             'hire_date', 'is_hr'
-#         ]
-#         # We don't want to send the password back to the frontend!
-#         extra_kwargs = {'password': {'write_only': True}}
-
-#         # payroll/urls.py
-#         def to_representation(self, instance):
-#             data = super().to_representation(instance)
-#             request = self.context.get('request')
-
-#         # If the person looking at the data is NOT an HR user...
-#             if request and request.user.is_authenticated and not request.user.is_hr:
-#             # ...hide sensitive payroll info
-#                 sensitive_fields = ['bank_account_number', 'tax_id', 'is_hr']
-#             for field in sensitive_fields:
-#                 data.pop(field, None)
-        
-#             return data
-
-
-       

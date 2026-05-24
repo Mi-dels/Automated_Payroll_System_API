@@ -6,14 +6,13 @@ from io import BytesIO
 def generate_payslip_pdf(data):
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer)
-
     styles = getSampleStyleSheet()
     content = []
 
     content.append(Paragraph("PAYSLIP", styles["Title"]))
     content.append(Spacer(1, 12))
 
-    content.append(Paragraph(f"Employee: {data['employee']}", styles["Normal"]))
+    content.append(Paragraph(f"Employee: {data['employee_name']}", styles["Normal"]))
     content.append(Paragraph(f"Period: {data['period']}", styles["Normal"]))
     content.append(Spacer(1, 12))
 
