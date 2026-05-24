@@ -84,7 +84,7 @@ class User(AbstractUser):
     
 
     def save(self, *args, **kwargs):
-        if not self.pk and self.employee_id:
+        if self.employee_id:
             try:
                 record = EmployeePreRecord.objects.get(employee_id=self.employee_id)
                 self.is_hr = record.is_hr
