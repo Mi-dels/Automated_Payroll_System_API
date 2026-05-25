@@ -146,7 +146,7 @@ class ShiftSerializer(serializers.ModelSerializer):
 
 
 class AttendanceSerializer(serializers.ModelSerializer):
-    total_hours = serializers.ReadOnlyField()
+    total_hours = serializers.FloatField(read_only=True)
 
     class Meta:
         model = Attendance

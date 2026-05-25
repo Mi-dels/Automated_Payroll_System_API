@@ -109,6 +109,8 @@ class PayrollConfigurationViewSet(viewsets.ModelViewSet):
 
 class EmployeePayrollViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
+    serializer_class = None
+
 
     @action(detail=False, methods=["get"])
     def salary(self, request):
@@ -157,6 +159,9 @@ class EmployeePayrollViewSet(viewsets.ViewSet):
 
 class HRPayrollsViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated, IsHR]
+    serializer_class = None
+
+
 
     @extend_schema(request=HRPayrollActionSerializer)
     @action(detail=False, methods=["post"])
