@@ -15,7 +15,7 @@ from .serializers import (
 
 
 class AuthViewSet(viewsets.ViewSet):
-
+    serializer_class = None
    
     # REGISTER
     @extend_schema(auth=[], request=RegisterSerializer)

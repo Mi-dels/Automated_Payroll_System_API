@@ -1,0 +1,1978 @@
+openapi: 3.0.3
+info:
+  title: Payroll API
+  version: 1.0.0
+  description: HR + Payroll System API
+paths:
+  /api/auth/login/:
+    post:
+      operationId: auth_login_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        '200':
+          description: No response body
+  /api/auth/logout/:
+    post:
+      operationId: auth_logout_create
+      tags:
+      - auth
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/profile/:
+    get:
+      operationId: auth_profile_retrieve
+      tags:
+      - auth
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/register/:
+    post:
+      operationId: auth_register_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+        required: true
+      responses:
+        '200':
+          description: No response body
+  /api/employee/payroll/payslip/:
+    get:
+      operationId: employee_payroll_payslip_retrieve
+      tags:
+      - employee
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/employee/payroll/salary/:
+    get:
+      operationId: employee_payroll_salary_retrieve
+      tags:
+      - employee
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/hr-pre-records/:
+    get:
+      operationId: hr_pre_records_list
+      tags:
+      - hr-pre-records
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmployeePreRecord'
+          description: ''
+    post:
+      operationId: hr_pre_records_create
+      tags:
+      - hr-pre-records
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeePreRecordRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EmployeePreRecordRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EmployeePreRecordRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeePreRecord'
+          description: ''
+  /api/hr-pre-records/{id}/:
+    get:
+      operationId: hr_pre_records_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this employee pre record.
+        required: true
+      tags:
+      - hr-pre-records
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeePreRecord'
+          description: ''
+    put:
+      operationId: hr_pre_records_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this employee pre record.
+        required: true
+      tags:
+      - hr-pre-records
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeePreRecordRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EmployeePreRecordRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EmployeePreRecordRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeePreRecord'
+          description: ''
+    patch:
+      operationId: hr_pre_records_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this employee pre record.
+        required: true
+      tags:
+      - hr-pre-records
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedEmployeePreRecordRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedEmployeePreRecordRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedEmployeePreRecordRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeePreRecord'
+          description: ''
+    delete:
+      operationId: hr_pre_records_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this employee pre record.
+        required: true
+      tags:
+      - hr-pre-records
+      security:
+      - BearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/hr/payroll/approve/:
+    post:
+      operationId: hr_payroll_approve_create
+      tags:
+      - hr
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalaryApprovalRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SalaryApprovalRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SalaryApprovalRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/hr/payroll/bulk_pay/:
+    post:
+      operationId: hr_payroll_bulk_pay_create
+      tags:
+      - hr
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkPaymentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BulkPaymentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BulkPaymentRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/hr/payroll/export/:
+    get:
+      operationId: hr_payroll_export_retrieve
+      tags:
+      - hr
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/hr/payroll/generate/:
+    post:
+      operationId: hr_payroll_generate_create
+      tags:
+      - hr
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HRPayrollActionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/HRPayrollActionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/HRPayrollActionRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/hr/payroll/pay/:
+    post:
+      operationId: hr_payroll_pay_create
+      tags:
+      - hr
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalaryPaymentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SalaryPaymentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SalaryPaymentRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/mark_attendance/:
+    get:
+      operationId: mark_attendance_list
+      tags:
+      - mark_attendance
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Attendance'
+          description: ''
+  /api/mark_attendance/{id}/:
+    get:
+      operationId: mark_attendance_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this attendance.
+        required: true
+      tags:
+      - mark_attendance
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attendance'
+          description: ''
+  /api/mark_attendance/clock_in/:
+    post:
+      operationId: mark_attendance_clock_in_create
+      tags:
+      - mark_attendance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClockInRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClockInRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClockInRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attendance'
+          description: ''
+  /api/mark_attendance/clock_out/:
+    post:
+      operationId: mark_attendance_clock_out_create
+      tags:
+      - mark_attendance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClockOutRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClockOutRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClockOutRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attendance'
+          description: ''
+  /api/payroll_config/:
+    get:
+      operationId: payroll_config_list
+      tags:
+      - payroll_config
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PayrollConfiguration'
+          description: ''
+    post:
+      operationId: payroll_config_create
+      tags:
+      - payroll_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayrollConfigurationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PayrollConfigurationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PayrollConfigurationRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayrollConfiguration'
+          description: ''
+  /api/payroll_config/{id}/:
+    get:
+      operationId: payroll_config_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Payroll Configuration.
+        required: true
+      tags:
+      - payroll_config
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayrollConfiguration'
+          description: ''
+    put:
+      operationId: payroll_config_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Payroll Configuration.
+        required: true
+      tags:
+      - payroll_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayrollConfigurationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PayrollConfigurationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PayrollConfigurationRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayrollConfiguration'
+          description: ''
+    patch:
+      operationId: payroll_config_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Payroll Configuration.
+        required: true
+      tags:
+      - payroll_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPayrollConfigurationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPayrollConfigurationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPayrollConfigurationRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayrollConfiguration'
+          description: ''
+    delete:
+      operationId: payroll_config_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Payroll Configuration.
+        required: true
+      tags:
+      - payroll_config
+      security:
+      - BearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/payroll_periods/:
+    get:
+      operationId: payroll_periods_list
+      tags:
+      - payroll_periods
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PayrollPeriod'
+          description: ''
+    post:
+      operationId: payroll_periods_create
+      tags:
+      - payroll_periods
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayrollPeriodRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PayrollPeriodRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PayrollPeriodRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayrollPeriod'
+          description: ''
+  /api/payroll_periods/{id}/:
+    get:
+      operationId: payroll_periods_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this payroll period.
+        required: true
+      tags:
+      - payroll_periods
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayrollPeriod'
+          description: ''
+    put:
+      operationId: payroll_periods_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this payroll period.
+        required: true
+      tags:
+      - payroll_periods
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayrollPeriodRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PayrollPeriodRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PayrollPeriodRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayrollPeriod'
+          description: ''
+    patch:
+      operationId: payroll_periods_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this payroll period.
+        required: true
+      tags:
+      - payroll_periods
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPayrollPeriodRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPayrollPeriodRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPayrollPeriodRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayrollPeriod'
+          description: ''
+    delete:
+      operationId: payroll_periods_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this payroll period.
+        required: true
+      tags:
+      - payroll_periods
+      security:
+      - BearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/shifts/:
+    get:
+      operationId: shifts_list
+      tags:
+      - shifts
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Shift'
+          description: ''
+    post:
+      operationId: shifts_create
+      tags:
+      - shifts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShiftRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ShiftRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ShiftRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shift'
+          description: ''
+  /api/shifts/{id}/:
+    get:
+      operationId: shifts_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this shift.
+        required: true
+      tags:
+      - shifts
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shift'
+          description: ''
+    put:
+      operationId: shifts_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this shift.
+        required: true
+      tags:
+      - shifts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShiftRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ShiftRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ShiftRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shift'
+          description: ''
+    patch:
+      operationId: shifts_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this shift.
+        required: true
+      tags:
+      - shifts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedShiftRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedShiftRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedShiftRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shift'
+          description: ''
+    delete:
+      operationId: shifts_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this shift.
+        required: true
+      tags:
+      - shifts
+      security:
+      - BearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/token/:
+    post:
+      operationId: token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/token/refresh/:
+    post:
+      operationId: token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/users/:
+    get:
+      operationId: users_list
+      tags:
+      - users
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+          description: ''
+    post:
+      operationId: users_create
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/users/{id}/:
+    get:
+      operationId: users_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: users_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: users_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    delete:
+      operationId: users_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      security:
+      - BearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/users/me/:
+    patch:
+      operationId: users_me_partial_update
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/workspace/:
+    get:
+      operationId: workspace_list
+      tags:
+      - workspace
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Workspace'
+          description: ''
+    post:
+      operationId: workspace_create
+      tags:
+      - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WorkspaceRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WorkspaceRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+          description: ''
+  /api/workspace/{id}/:
+    get:
+      operationId: workspace_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this workspace.
+        required: true
+      tags:
+      - workspace
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+          description: ''
+    put:
+      operationId: workspace_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this workspace.
+        required: true
+      tags:
+      - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WorkspaceRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WorkspaceRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+          description: ''
+    patch:
+      operationId: workspace_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this workspace.
+        required: true
+      tags:
+      - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkspaceRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkspaceRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkspaceRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+          description: ''
+    delete:
+      operationId: workspace_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this workspace.
+        required: true
+      tags:
+      - workspace
+      security:
+      - BearerAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    Attendance:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        employee:
+          type: integer
+          nullable: true
+        workspace:
+          type: integer
+          nullable: true
+        shift:
+          type: integer
+          nullable: true
+        date:
+          type: string
+          format: date
+          readOnly: true
+        clock_in_time:
+          type: string
+          format: date-time
+          nullable: true
+        clock_out_time:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        late_minutes:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        overtime_hours:
+          type: number
+          format: double
+          nullable: true
+        total_hours:
+          type: number
+          format: double
+          readOnly: true
+        is_suspicious:
+          type: boolean
+      required:
+      - date
+      - id
+      - total_hours
+    BulkPaymentRequest:
+      type: object
+      properties:
+        period_id:
+          type: integer
+      required:
+      - period_id
+    ClockInRequest:
+      type: object
+      properties:
+        lat:
+          type: number
+          format: double
+        lon:
+          type: number
+          format: double
+      required:
+      - lat
+      - lon
+    ClockOutRequest:
+      type: object
+      properties:
+        lat:
+          type: number
+          format: double
+        lon:
+          type: number
+          format: double
+      required:
+      - lat
+      - lon
+    Department:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          nullable: true
+          maxLength: 100
+      required:
+      - id
+    DepartmentRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 100
+    EmployeePreRecord:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        department:
+          $ref: '#/components/schemas/Department'
+        job_title:
+          $ref: '#/components/schemas/JobTitle'
+        employment_status:
+          $ref: '#/components/schemas/EmploymentStatus'
+        employee_id:
+          type: string
+          nullable: true
+          maxLength: 20
+        hire_date:
+          type: string
+          format: date
+          nullable: true
+        is_hr:
+          type: boolean
+      required:
+      - department
+      - employment_status
+      - id
+      - job_title
+    EmployeePreRecordRequest:
+      type: object
+      properties:
+        department:
+          $ref: '#/components/schemas/DepartmentRequest'
+        job_title:
+          $ref: '#/components/schemas/JobTitleRequest'
+        employment_status:
+          $ref: '#/components/schemas/EmploymentStatusRequest'
+        employee_id:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 20
+        hire_date:
+          type: string
+          format: date
+          nullable: true
+        is_hr:
+          type: boolean
+      required:
+      - department
+      - employment_status
+      - job_title
+    EmploymentStatus:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          nullable: true
+          maxLength: 50
+      required:
+      - id
+    EmploymentStatusRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 50
+    HRPayrollActionRequest:
+      type: object
+      properties:
+        employee_id:
+          type: integer
+        year:
+          type: integer
+        month:
+          type: integer
+      required:
+      - employee_id
+      - month
+      - year
+    JobTitle:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          nullable: true
+          maxLength: 100
+      required:
+      - id
+    JobTitleRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 100
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - password
+      - username
+    PatchedEmployeePreRecordRequest:
+      type: object
+      properties:
+        department:
+          $ref: '#/components/schemas/DepartmentRequest'
+        job_title:
+          $ref: '#/components/schemas/JobTitleRequest'
+        employment_status:
+          $ref: '#/components/schemas/EmploymentStatusRequest'
+        employee_id:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 20
+        hire_date:
+          type: string
+          format: date
+          nullable: true
+        is_hr:
+          type: boolean
+    PatchedPayrollConfigurationRequest:
+      type: object
+      properties:
+        default_hourly_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          description: Default hourly rate for all employees.
+        late_penalty_per_minute:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          description: Amount deducted per minute of lateness.
+        overtime_rate_multiplier:
+          type: number
+          format: double
+          description: Multipier for overtime hours.
+    PatchedPayrollPeriodRequest:
+      type: object
+      properties:
+        month:
+          type: string
+          format: date
+        is_closed:
+          type: boolean
+    PatchedShiftRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        grace_minutes:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        hourly_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Override default hourly rate for this shift.
+        late_penalty_per_minute:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: 'Override default late penalty per minute for this shift. '
+        overtime_rate_multiplier:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Override default overtime rate multiplier for this shift.
+    PatchedUserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        employee_id:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 20
+        phone_number:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 20
+        address:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 100
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+          maxLength: 128
+        emergency_contact:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 50
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+        bank_account_number:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 50
+        bank_code:
+          type: string
+          nullable: true
+          description: e.g., 057 for Zenith, 999992 for OPay
+          maxLength: 10
+    PatchedWorkspaceRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        lat:
+          type: number
+          format: double
+          writeOnly: true
+        lon:
+          type: number
+          format: double
+          writeOnly: true
+        radius_meters:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        shifts:
+          type: array
+          items:
+            type: integer
+    PayrollConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        default_hourly_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          description: Default hourly rate for all employees.
+        late_penalty_per_minute:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          description: Amount deducted per minute of lateness.
+        overtime_rate_multiplier:
+          type: number
+          format: double
+          description: Multipier for overtime hours.
+      required:
+      - id
+    PayrollConfigurationRequest:
+      type: object
+      properties:
+        default_hourly_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          description: Default hourly rate for all employees.
+        late_penalty_per_minute:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          description: Amount deducted per minute of lateness.
+        overtime_rate_multiplier:
+          type: number
+          format: double
+          description: Multipier for overtime hours.
+    PayrollPeriod:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        month:
+          type: string
+          format: date
+        is_closed:
+          type: boolean
+      required:
+      - id
+      - month
+    PayrollPeriodRequest:
+      type: object
+      properties:
+        month:
+          type: string
+          format: date
+        is_closed:
+          type: boolean
+      required:
+      - month
+    RegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        full_name:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 100
+        phone_number:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 20
+      required:
+      - password
+      - username
+    SalaryApprovalRequest:
+      type: object
+      properties:
+        salary_id:
+          type: integer
+      required:
+      - salary_id
+    SalaryPaymentRequest:
+      type: object
+      properties:
+        salary_id:
+          type: integer
+        transaction_reference:
+          type: string
+          minLength: 1
+      required:
+      - salary_id
+    Shift:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        grace_minutes:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        hourly_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Override default hourly rate for this shift.
+        late_penalty_per_minute:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: 'Override default late penalty per minute for this shift. '
+        overtime_rate_multiplier:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Override default overtime rate multiplier for this shift.
+      required:
+      - end_time
+      - id
+      - name
+      - start_time
+    ShiftRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        grace_minutes:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        hourly_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Override default hourly rate for this shift.
+        late_penalty_per_minute:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: 'Override default late penalty per minute for this shift. '
+        overtime_rate_multiplier:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Override default overtime rate multiplier for this shift.
+      required:
+      - end_time
+      - name
+      - start_time
+    StatusEnum:
+      enum:
+      - PRESENT
+      - PRESENT (GRACE)
+      - LATE
+      - ABSENT
+      type: string
+      description: |-
+        * `PRESENT` - Present
+        * `PRESENT (GRACE)` - Grace
+        * `LATE` - Late
+        * `ABSENT` - Absent
+    TokenObtainPair:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - refresh
+    TokenObtainPairRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - password
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+      required:
+      - access
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - refresh
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        employee_id:
+          type: string
+          nullable: true
+          maxLength: 20
+        department:
+          type: string
+          readOnly: true
+        job_title:
+          type: string
+          readOnly: true
+        employment_status:
+          type: string
+          readOnly: true
+        is_hr:
+          type: boolean
+          readOnly: true
+        phone_number:
+          type: string
+          nullable: true
+          maxLength: 20
+        address:
+          type: string
+          nullable: true
+          maxLength: 100
+        emergency_contact:
+          type: string
+          nullable: true
+          maxLength: 50
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+        bank_account_number:
+          type: string
+          nullable: true
+          maxLength: 50
+        bank_code:
+          type: string
+          nullable: true
+          description: e.g., 057 for Zenith, 999992 for OPay
+          maxLength: 10
+      required:
+      - department
+      - employment_status
+      - id
+      - is_hr
+      - job_title
+      - username
+    UserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        employee_id:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 20
+        phone_number:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 20
+        address:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 100
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+          maxLength: 128
+        emergency_contact:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 50
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+        bank_account_number:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 50
+        bank_code:
+          type: string
+          nullable: true
+          description: e.g., 057 for Zenith, 999992 for OPay
+          maxLength: 10
+      required:
+      - password
+      - username
+    Workspace:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        radius_meters:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        shifts:
+          type: array
+          items:
+            type: integer
+      required:
+      - id
+      - shifts
+    WorkspaceRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        lat:
+          type: number
+          format: double
+          writeOnly: true
+        lon:
+          type: number
+          format: double
+          writeOnly: true
+        radius_meters:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        shifts:
+          type: array
+          items:
+            type: integer
+      required:
+      - lat
+      - lon
+      - shifts
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
