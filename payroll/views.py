@@ -35,11 +35,21 @@ class AccessPermission(permissions.BasePermission):
             return True
         return obj.is_hr == request.user
 
-class IsHRorSelf(permissions.BasePermission):
+# class IsHRorSelf(permissions.BasePermission):
+#     def has_object_permission(self, request, view, obj):
+#         if request.user.is_authenticated and request.user.is_hr:
+#             return True
+#         return obj == request.user
+
+
+class IsHROrOwner(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
+
     def has_object_permission(self, request, view, obj):
-        if request.user.is_authenticated and request.user.is_hr:
+        if getattr(request.user, "is_hr", False):
             return True
-        return obj == request.user
+        return obj.employee == request.user
     
 
 class HRMasterRecordViewSet(viewsets.ModelViewSet):
@@ -88,13 +98,13 @@ class UserViewSet(viewsets.ModelViewSet):
     #     return User.objects.filter(id=user.id)
 
 class PayrollPeriodViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsHR]
+    permission_classes = [IsAuthenticated, AccessPermission]
     queryset = PayrollPeriod.objects.all().order_by('-month')
     serializer_class = PayrollPeriodSerializer
 
 
 class PayrollConfigurationViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsHR]
+    permission_classes = [IsAuthenticated, AccessPermission]
     queryset = PayrollConfiguration.objects.all()
     serializer_class = PayrollConfigurationSerializer
     
@@ -158,7 +168,7 @@ class EmployeePayrollViewSet(viewsets.ViewSet):
             )
 
 class HRPayrollsViewSet(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated, IsHR]
+    permission_classes = [IsAuthenticated, IsHROrOwner]
     serializer_class = None
 
 
