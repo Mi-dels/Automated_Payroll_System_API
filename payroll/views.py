@@ -96,7 +96,7 @@ class PayrollPeriodViewSet(viewsets.ModelViewSet):
 class PayrollConfigurationViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsHR]
     queryset = PayrollConfiguration.objects.all()
-    serialiizer_class = PayrollConfigurationSerializer
+    serializer_class = PayrollConfigurationSerializer
     
     @extend_schema(request=PayrollConfigurationSerializer)
     def create(self, request, *args, **kwargs):
