@@ -97,7 +97,8 @@ class PayrollConfigurationViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsHR]
     queryset = PayrollConfiguration.objects.all()
     serialiizer_class = PayrollConfigurationSerializer
-
+    
+    @extend_schema(request=PayrollConfigurationSerializer)
     def create(self, request, *args, **kwargs):
         if PayrollConfiguration.objects.exists():
             return Response(
