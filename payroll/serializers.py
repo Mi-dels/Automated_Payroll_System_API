@@ -130,7 +130,7 @@ class PayrollPeriodSerializer(serializers.ModelSerializer):
 class PayrollConfigurationSerializer(serializers.ModelSerializer):
     class Meta:
         model = PayrollConfiguration
-        fields = ["id", "default_hourly_rate", "default_late_penalty_per_minute", "default_overtime_rate_multiplier"]
+        fields = ["id", "default_hourly_rate", "late_penalty_per_minute", "overtime_rate_multiplier"]
 
 
 
