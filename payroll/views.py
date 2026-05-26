@@ -176,23 +176,52 @@ class HRPayrollsViewSet(viewsets.ViewSet):
     @extend_schema(request=HRPayrollActionSerializer)
     @action(detail=False, methods=["post"])
     def generate(self, request):
-        user_id = request.data.get("employee_id")
-        year = request.data.get("year")
-        month = request.data.get("month")
-        period = PayrollPeriod.objects.filter(
-            month__year=year,
-            month__month=month
-        ).first()
-        if not period:
+    
+        try:
+            user_id = request.data.get("employee_id")
+            year = request.data.get("year")
+            month = request.data.get("month")
+
+            period = PayrollPeriod.objects.filter(
+                month__year=year,
+                month__month=month
+            ).first()
+
+            if not period:
+                return Response(
+                    {"error": "Payroll period not found"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            User = get_user_model()
+            user = User.objects.get(id=user_id)
+            result = generate_salary(user, year, month)
+            return Response(result)
+
+        except Exception as e:
             return Response(
-                {"error": "Payroll period not found"},
+                {"error": str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+
+        # user_id = request.data.get("employee_id")
+        # year = request.data.get("year")
+        # month = request.data.get("month")
+        # period = PayrollPeriod.objects.filter(
+        #     month__year=year,
+        #     month__month=month
+        # ).first()
+        # if not period:
+        #     return Response(
+        #         {"error": "Payroll period not found"},
+        #         status=status.HTTP_400_BAD_REQUEST
+        #     )
         
-        User = get_user_model()
-        user = User.objects.get(id=user_id)
-        result = generate_salary(user, year, month)
-        return Response(result)
+        # User = get_user_model()
+        # user = User.objects.get(id=user_id)
+        # result = generate_salary(user, year, month)
+        # return Response(result)
 
     @extend_schema(request=SalaryApprovalSerializer)
     @action(detail=False, methods=["post"])
