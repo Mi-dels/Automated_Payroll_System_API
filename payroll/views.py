@@ -234,11 +234,17 @@ class HRPayrollsViewSet(viewsets.ViewSet):
     @extend_schema(request=SalaryPaymentSerializer)
     @action(detail=False, methods=["post"])
     def pay(self, request):
-        salary_id = request.data.get("salary_id")
-        reference = request.data.get("reference")
-        salary = Salary.objects.get(id=salary_id)
-        mark_salary_as_paid(salary, reference)
-        return Response({"message": "Payment successful"})
+        try:
+            salary_id = request.data.get("salary_id")
+            reference = request.data.get("reference")
+            salary = Salary.objects.get(id=salary_id)
+            mark_salary_as_paid(salary, reference)
+            return Response({"message": "Payment successful"})
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
     @extend_schema(request=BulkPaymentSerializer)
     @action(detail=False, methods=["post"])
