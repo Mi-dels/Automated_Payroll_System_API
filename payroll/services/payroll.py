@@ -130,10 +130,9 @@ def generate_salary(user, year, month):
         * overtime_multiplier
     )
 
-    late_deduction = min(
-        Decimal(str(total_late)) * late_penalty_per_minute,
+    late_deduction = Decimal(str(total_late)) * late_penalty_per_minute
         
-    )
+    
 
     absence_deduction = Decimal(absent_days) * absent_penalty
 
