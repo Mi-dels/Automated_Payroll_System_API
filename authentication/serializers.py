@@ -41,7 +41,7 @@ class LoginSerializer(serializers.Serializer):
 
     def validate(self, data):
         try:
-            user = User.objects.filter(username=data["username"]).first
+            user = User.objects.filter(username=data["username"]).first()
         
 
             if not user :
