@@ -50,7 +50,7 @@ class LoginSerializer(serializers.Serializer):
         if not user :
             raise serializers.ValidationError(f"user not found{data['username']}")
         if not user.check_password(data["password"]):
-            raise serializers.ValidationError(f"wrong password for user:{datd['username']}")
+            raise serializers.ValidationError(f"wrong password for user:{data['username']}")
 
         refresh = RefreshToken.for_user(user)
 
