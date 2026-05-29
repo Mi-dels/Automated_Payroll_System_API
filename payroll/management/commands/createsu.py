@@ -17,7 +17,7 @@ class Command(BaseCommand):
                 
             )
             
-            User.objets.filter(username='admin').update(is_hr=True)
+            User.objects.filter(username='admin').update(is_hr=True)
             self.stdout.write("Superuser created succesfully")
         else:
             self.stdout.write("Superuser already exists")
