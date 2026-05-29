@@ -6,6 +6,7 @@ from django.contrib.auth.hashers import make_password
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         User = get_user_model()
+        User.objects.filter(username='admin').delete()
         if not User.objects.filter(username='admin').exists():
             User.objects.create(
                 username='admin',
@@ -13,10 +14,10 @@ class Command(BaseCommand):
                 password=make_password('admiin1234'),
                 is_staff=True,
                 is_superuser=True,
-                is_hr=True
+                
             )
             
-            
+            User.objets.filter(username='admin').update(is_hr=True)
             self.stdout.write("Superuser created succesfully")
         else:
             self.stdout.write("Superuser already exists")
