@@ -40,14 +40,17 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
 
     def validate(self, data):
-        user = authenticate(
-            username=data["username"],
-            password=data["password"]
-        )
+        user = User.objects.filter(username=data["username"]).first
+        # user = authenticate(
+        #     username=data["username"],
+        #     password=data["password"]
+        # )
         # user = User.objects.filter(username=data["username"]).first()
 
         if not user :
-            raise serializers.ValidationError("Invalid credentials")
+            raise serializers.ValidationError(f"user not found{data['username']}")
+        if not user.check_password(data["password"]):
+            raise serializers.ValidationError(f"wrong password for user:{datd['username']}")
 
         refresh = RefreshToken.for_user(user)
 
