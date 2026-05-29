@@ -1,4 +1,4 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -40,9 +40,13 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
 
     def validate(self, data):
-        user = User.objects.filter(username=data["username"]).first()
+        user = authenticate(
+            username=data["username"],
+            password=data["password"]
+        )
+        # user = User.objects.filter(username=data["username"]).first()
 
-        if not user or not user.check_password(data["password"]):
+        if not user :
             raise serializers.ValidationError("Invalid credentials")
 
         refresh = RefreshToken.for_user(user)
@@ -54,7 +58,7 @@ class LoginSerializer(serializers.Serializer):
                 "email": user.email,
                 "role": user.role,
                 "is_hr": user.is_hr,
-                # "employee_id": user.employee_id,
+                "employee_id": user.employee_id,
             },
             "tokens": {
                 "refresh": str(refresh),
