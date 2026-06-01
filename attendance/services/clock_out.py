@@ -11,7 +11,7 @@ def process_clock_out(user, lat, lon):
     Handles clock-out business logic
     """
 
-    local_now = timezone.localtime(timezone.now())
+    local_now = timezone.localtime()
     location = Point(lon, lat, srid=4326)
 
     # FIND ACTIVE RECORD 
