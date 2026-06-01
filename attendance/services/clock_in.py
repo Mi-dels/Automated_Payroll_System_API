@@ -28,7 +28,7 @@ def process_clock_in(user, workspace, location):
     # print("Workspace ID:", workspace.id)
     # print("Workspace shifts:", workspace.shifts.all())
 
-    local_now = timezone.localtime()
+    local_now = timezone.localtime(timezone.now())
 
     # GEO FENCE 
     # GeoDjango distance returns degrees → convert to meters approx

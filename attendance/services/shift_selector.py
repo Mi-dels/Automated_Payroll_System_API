@@ -5,7 +5,7 @@ def get_active_shift(workspace):
     """
     Determine which shift is currently active for a workspace
     """
-    now = timezone.localtime()
+    now = timezone.localtime(timezone.now())
 
     buffer_minutes = 30
 
