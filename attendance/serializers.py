@@ -165,6 +165,12 @@ class AttendanceSerializer(serializers.ModelSerializer):
             "is_suspicious"
         ]
 
+class EmergencyClockOutSerializer(serializers.Serializer):
+    employee_id = serializers.IntegerField()
+    reason = serializers.CharField(
+        help_text="Reason for emergency early leave e.g medical emergency, family emergency e.t.c"
+    )
+
 
 
 
