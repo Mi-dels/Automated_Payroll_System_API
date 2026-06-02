@@ -137,35 +137,47 @@ class AttendanceViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, methods=["get"], url_path="my_shift")
     def my_shift(self, request):
         user = request.user
-        attendance = Attendance.objects.filters(
-            employee=user,
-            shift__isnull=False
-        ).order_by("-date").first()
+        try:
+            attendance = Attendance.objects.filters(
+                employee=user,
+                shift__isnull=False
+            ).order_by("-date").first()
 
-        if not attendance or not attendance.shift:
+            if not attendance or not attendance.shift:
+                return Response(
+                   {"error": "No shift assigned yet"},
+                   status=status.HTTP_404_NOT_FOUND
+                )
+            serializer = ShiftSerializer(attendance.shift)
+            return Response(serializer.data)
+        except Exception as e:
             return Response(
-                {"error": "No shift assigned yet"},
-                status=status.HTTP_404_NOT_FOUND
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
             )
-        serializer = ShiftSerializer(attendance.shift)
-        return Response(serializer.data)
 
     @extend_schema(request=WorkspaceSerializer)
     @action(detail=False, methods=["get"], url_path="my_workspace")
     def my_workspace(self, request):
         user = request.user
-        attendance = Attendance.objects.filters(
-            employee=user,
-            workspace__isnull=False
-        ).order_by("-date").first()
+        try:
+            attendance = Attendance.objects.filters(
+                employee=user,
+                workspace__isnull=False
+            ).order_by("-date").first()
 
-        if not attendance or not attendance.workspaces:
+            if not attendance or not attendance.workspaces:
+                return Response(
+                    {"error": "No workspace assigned yet"},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            serializer = WorkspaceSerializer(attendance.workspace)
+            return Response(serializer.data)
+        except Exception as e:
             return Response(
-                {"error": "No workspace assigned yet"},
-                status=status.HTTP_404_NOT_FOUND
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
             )
-        serializer = WorkspaceSerializer(attendance.workspace)
-        return Response(serializer.data)
 
 class WorkspaceViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsHROrOwner]
