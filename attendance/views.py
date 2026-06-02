@@ -138,7 +138,7 @@ class AttendanceViewSet(viewsets.ReadOnlyModelViewSet):
     def my_shift(self, request):
         user = request.user
         try:
-            attendance = Attendance.objects.filters(
+            attendance = Attendance.objects.filter(
                 employee=user,
                 shift__isnull=False
             ).order_by("-date").first()
@@ -161,7 +161,7 @@ class AttendanceViewSet(viewsets.ReadOnlyModelViewSet):
     def my_workspace(self, request):
         user = request.user
         try:
-            attendance = Attendance.objects.filters(
+            attendance = Attendance.objects.filter(
                 employee=user,
                 workspace__isnull=False
             ).order_by("-date").first()
