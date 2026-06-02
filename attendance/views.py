@@ -166,7 +166,7 @@ class AttendanceViewSet(viewsets.ReadOnlyModelViewSet):
                 workspace__isnull=False
             ).order_by("-date").first()
 
-            if not attendance or not attendance.workspaces:
+            if not attendance or not attendance.workspace:
                 return Response(
                     {"error": "No workspace assigned yet"},
                     status=status.HTTP_404_NOT_FOUND
