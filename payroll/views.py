@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.conf import settings
 import hmac
 import hashlib
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.permissions import AllowAny
 from .models import User, EmployeePreRecord, Salary, PayrollPeriod, PayrollConfiguration
 from .serializers import (
@@ -266,6 +266,17 @@ class HRPayrollsViewSet(viewsets.ViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='period_id',
+                type=int,
+                location=OpenApiParameter.QUERY,
+                description='Id of the payroll period to export.',
+                required=True
+            )
+        ]
+    )
     @action(detail=False, methods=["get"])
     def export(self, request):
         try:
