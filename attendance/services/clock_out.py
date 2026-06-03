@@ -35,10 +35,11 @@ def process_clock_out(user, lat, lon):
     total_hours = duration.total_seconds() / 3600
 
     shift_start = timezone.make_aware(
-        datetime.combine(local_now.date(), shift.start_time)
+        datetime.combine(local_now.date(), shift.start_time),
+        timezone.get_current_timezone()
     )
     shift_end = timezone.make_aware(
-        datetime.combine(local_now.date(), shift.end_time)
+        datetime.combine(local_now.date(), shift.end_time), timezone.get_current_timezone()
     )
 
     shift_hours = (shift_end - shift_start).total_seconds() / 3600
@@ -46,8 +47,8 @@ def process_clock_out(user, lat, lon):
     overtime_hours = max(0, total_hours - shift_hours)
 
     # BLOCK EARLY LEAVE
-    shift_end_aware = timezone.make_aware(shift_end)
-    if local_now < shift_end_aware:
+    # shift_end_aware = timezone.make_aware(shift_end)
+    if local_now < shift_end:
         raise ValidationError(
             "You cannot clock out before your shift ends."
             "Contact HR for emergency early leave approval."
