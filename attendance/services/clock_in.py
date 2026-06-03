@@ -39,17 +39,25 @@ def process_clock_in(user, workspace, location):
     #     raise ValidationError("You are outside the workspace area.")
 
     # SHIFT LOGIC 
-    shift_start = local_now.replace(
-        hour=shift.start_time.hour,
-        minute=shift.start_time.minute,
-        second=0,
-        microsecond=0
+    # shift_start = local_now.replace(
+    #     hour=shift.start_time.hour,
+    #     minute=shift.start_time.minute,
+    #     second=0,
+    #     microsecond=0
+    # )
+    shift_start_native = datetime.datetime.combine(
+        local_now.date(),
+        shift.start_time
     )
+    shift_start_utc = timezone.make_aware(shift_start_native, datetime.timezone.utc)
+    shift_start = timezone.localtime(shift_start_utc)
     #debug remove after fixing
     print(f"NOW LOCAL: {local_now}")
     print(f"SHIFT START : {shift_start}")
     print(f"SHIFT START TIME FROM DB : {shift.start_time}")
     print(f"DIFF MINUTES : {(local_now - shift_start).total_seconds() // 60}")
+
+    
 
     late_mins = max(
     0,
