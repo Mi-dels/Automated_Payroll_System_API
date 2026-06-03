@@ -1,4 +1,5 @@
 from django.utils import timezone
+import datetime
 from rest_framework.exceptions import ValidationError
 
 from attendance.models import Attendance
@@ -44,6 +45,11 @@ def process_clock_in(user, workspace, location):
         second=0,
         microsecond=0
     )
+    #debug remove after fixing
+    print(f"NOW LOCAL: {local_now}")
+    print(f"SHIFT START : {shift_start}")
+    print(f"SHIFT START TIME FROM DB : {shift.start_time}")
+    print(f"DIFF MINUTES : {(local_now - shift_start).total_seconds() // 60}")
 
     late_mins = max(
     0,
