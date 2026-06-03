@@ -27,6 +27,9 @@ def initiate_transfer(amount, account_number, bank_code, account_name, reference
     )
 
     data = response.json()
+    print(f"STATUS CODE : {response.status_code}")
+    print(f"RESPONSE : {data}")
+    print(f"SECRET KEY FIRST 10: {settings.FLUTTERWAVE_SECRET_KEY[:10]}")
 
     if response.status_code == 200 and data.get("status") == "success":
         return {
