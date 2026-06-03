@@ -226,10 +226,16 @@ class HRPayrollsViewSet(viewsets.ViewSet):
     @extend_schema(request=SalaryApprovalSerializer)
     @action(detail=False, methods=["post"])
     def approve(self, request):
-        salary_id = request.data.get("salary_id")
-        salary = Salary.objects.get(id=salary_id)
-        approve_salary(salary)
-        return Response({"message": "Salary approved"})
+        try:
+            salary_id = request.data.get("salary_id")
+            salary = Salary.objects.get(id=salary_id)
+            approve_salary(salary)
+            return Response({"message": "Salary approved"})
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
     @extend_schema(request=SalaryPaymentSerializer)
     @action(detail=False, methods=["post"])
@@ -249,17 +255,30 @@ class HRPayrollsViewSet(viewsets.ViewSet):
     @extend_schema(request=BulkPaymentSerializer)
     @action(detail=False, methods=["post"])
     def bulk_pay(self, request):
-        period_id = request.data.get("period_id")
-        period = PayrollPeriod.objects.get(id=period_id)
-        result = bulk_pay_period(period)
-        return Response(result)
+        try:
+            period_id = request.data.get("period_id")
+            period = PayrollPeriod.objects.get(id=period_id)
+            result = bulk_pay_period(period)
+            return Response(result)
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
     @action(detail=False, methods=["get"])
     def export(self, request):
-        period_id = request.query_params.get("period_id")
-        period = PayrollPeriod.objects.get(id=period_id)
-        result = export_all_payslips(period)
-        return Response(result)
+        try:
+            period_id = request.query_params.get("period_id")
+            period = PayrollPeriod.objects.get(id=period_id)
+            result = export_all_payslips(period)
+            return Response(result)
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
 
 
 
