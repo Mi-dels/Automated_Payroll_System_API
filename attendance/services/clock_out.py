@@ -34,8 +34,12 @@ def process_clock_out(user, lat, lon):
     duration = local_now - attendance.clock_in_time
     total_hours = duration.total_seconds() / 3600
 
-    shift_start = datetime.combine(local_now.date(), shift.start_time)
-    shift_end = datetime.combine(local_now.date(), shift.end_time)
+    shift_start = timezone.make_aware(
+        datetime.combine(local_now.date(), shift.start_time)
+    )
+    shift_end = timezone.make_aware(
+        datetime.combine(local_now.date(), shift.end_time)
+    )
 
     shift_hours = (shift_end - shift_start).total_seconds() / 3600
 
