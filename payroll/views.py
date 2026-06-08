@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from django.http import FileResponse
 from django.conf import settings
 import hmac
 import hashlib
@@ -156,15 +157,23 @@ class EmployeePayrollViewSet(viewsets.ViewSet):
         try:
             period = PayrollPeriod.objects.get(id=period_id)
             data = get_payslip_data(user, period)
-            # pdf = generate_payslip_pdf(data)
-            return Response({
-                "message": "Payslip generated",
-                "data": data
-            })
+            pdf = generate_payslip_pdf(data)
+            return FileResponse(
+                pdf,
+                as_attachment=True,
+                filename=f"payslip_{user.username}_{period.month}.pdf"
+                
+            )
         except PayrollPeriod.DoesNotExist:
             return Response(
                 {"error": "Invalid period"},
                 status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        except Salary.DoesNotExist:
+            return Response(
+                {"error": "No salary found for this period."},
+                status=status.HTTP_404_NOT_FOUND
             )
 
 class HRPayrollsViewSet(viewsets.ViewSet):

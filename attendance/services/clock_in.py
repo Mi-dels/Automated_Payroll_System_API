@@ -45,11 +45,11 @@ def process_clock_in(user, workspace, location):
     #     second=0,
     #     microsecond=0
     # )
-    shift_start_native = datetime.datetime.combine(
+    shift_start_naive = datetime.datetime.combine(
         local_now.date(),
         shift.start_time
     )
-    shift_start_utc = timezone.make_aware(shift_start_native, datetime.timezone.utc)
+    shift_start_utc = timezone.make_aware(shift_start_naive, datetime.timezone.utc)
     shift_start = timezone.localtime(shift_start_utc)
     #debug remove after fixing
     print(f"NOW LOCAL: {local_now}")
@@ -59,17 +59,20 @@ def process_clock_in(user, workspace, location):
 
     
 
-    late_mins = max(
+    minutes_since_start = max(
     0,
     int((local_now - shift_start).total_seconds() // 60)
     )
 
-    if late_mins <= 0:
+    if minutes_since_start<= 0:
         status = AttendanceStatus.PRESENT
-    elif late_mins <= shift.grace_minutes:
+        late_mins = 0
+    elif minutes_since_start <= shift.grace_minutes:
         status = AttendanceStatus.GRACE
+        late_mins = 0
     else:
         status = AttendanceStatus.LATE
+        late_mins = minutes_since_start
 
     # SUSPICIOUS CHECK
     last_attendance = Attendance.objects.filter(
@@ -98,7 +101,7 @@ def process_clock_in(user, workspace, location):
         "clock_in_time": local_now,
         "clock_in_location": location,
         "status": status,
-        "late_minutes": max(late_mins, 0),
+        "late_minutes": late_mins,
         "is_suspicious": is_suspicious,
 
        

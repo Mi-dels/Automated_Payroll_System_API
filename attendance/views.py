@@ -96,7 +96,7 @@ class AttendanceViewSet(viewsets.ReadOnlyModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
     
-    @extend_schema(request=ClockOutSerializer)
+    @extend_schema(request=EmergencyClockOutSerializer)
     @action(detail=False, methods=["post"], url_path="emergency_clock_out")
     def emergency_clock_out(self, request):
         if not getattr(request.user, "is_hr", False):
