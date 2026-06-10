@@ -125,9 +125,9 @@ def generate_salary(user, year, month):
     base_salary = Decimal(str(total_hours)) * hourly_rate
 
     overtime_pay = (
-        Decimal(str(total_overtime))
-        * hourly_rate
-        * overtime_multiplier
+        Decimal(str(total_overtime)) * overtime_multiplier
+        # * hourly_rate
+        
     )
 
     late_deduction = Decimal(str(total_late)) * late_penalty_per_minute
