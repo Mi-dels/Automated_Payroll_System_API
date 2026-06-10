@@ -35,12 +35,12 @@ def process_clock_out(user, lat, lon):
     total_hours = duration.total_seconds() / 3600
 
     shift_start_naive = datetime.combine(local_now.date(), shift.start_time)
-    shift_start_utc = timezone.make_aware(shift_start_naive, dt.timezone.utc)
-    shift_start = timezone.localtime(shift_start_utc)
+    shift_start = timezone.make_aware(shift_start_naive, timezone.get_current_timezone())
+    # shift_start = timezone.localtime(shift_start_utc)
 
     shift_end_naive = datetime.combine(local_now.date(), shift.end_time)
-    shift_end_utc = timezone.make_aware(shift_end_naive, dt.timezone.utc)
-    shift_end = timezone.localtime(shift_end_utc)
+    shift_end = timezone.make_aware(shift_end_naive, timezone.get_current_timezone())
+    # shift_end = timezone.localtime(shift_end_utc)
 
     # shift_start_native = timezone.make_aware(
     #     datetime.combine(local_now.date(), shift.start_time),

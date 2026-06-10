@@ -92,7 +92,7 @@ def generate_salary(user, year, month):
             (shift_end - shift_start).total_seconds() / 3600
         )
     else:
-        shift_hours = Decimal("8") # default 8 hours
+        shift_hours = Decimal("0") # default 8 hours
     
     absent_penalty = hourly_rate * Decimal(str(shift_hours))
 

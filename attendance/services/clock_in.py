@@ -49,8 +49,8 @@ def process_clock_in(user, workspace, location):
         local_now.date(),
         shift.start_time
     )
-    shift_start_utc = timezone.make_aware(shift_start_naive, datetime.timezone.utc)
-    shift_start = timezone.localtime(shift_start_utc)
+    shift_start = timezone.make_aware(shift_start_naive, timezone.get_current_timezone())
+    # shift_start = timezone.localtime(shift_start_utc)
     #debug remove after fixing
     print(f"NOW LOCAL: {local_now}")
     print(f"SHIFT START : {shift_start}")
