@@ -76,25 +76,25 @@ def generate_salary(user, year, month):
     # AUTO ABSENT PENALTY
     #(hourly_rate * shift duration)
 
-    if shift_obj:
-        shift_start = datetime.datetime.combine(
-            datetime.date.today(), shift_obj.start_time
-        )
-        shift_end = datetime.datetime.combine(
-            datetime.date.today(), shift_obj.end_time
-        )
+    # if shift_obj:
+    #     shift_start = datetime.datetime.combine(
+    #         datetime.date.today(), shift_obj.start_time
+    #     )
+    #     shift_end = datetime.datetime.combine(
+    #         datetime.date.today(), shift_obj.end_time
+    #     )
 
-        # Handles night time
+    #     # Handles night time
 
-        if shift_obj.end_time < shift_obj.start_time:
-            shift_end += datetime.timedelta(days=1)
-        shift_hours = float(
-            (shift_end - shift_start).total_seconds() / 3600
-        )
-    else:
-        shift_hours = Decimal("0") # default 8 hours
+    #     if shift_obj.end_time < shift_obj.start_time:
+    #         shift_end += datetime.timedelta(days=1)
+    #     shift_hours = float(
+    #         (shift_end - shift_start).total_seconds() / 3600
+    #     )
+    # else:
+    #     shift_hours = Decimal("0") # default 8 hours
     
-    absent_penalty = hourly_rate * Decimal(str(shift_hours))
+    # absent_penalty = hourly_rate * Decimal(str(shift_hours))
 
     
     # SAFE AGGREGATION
@@ -134,13 +134,13 @@ def generate_salary(user, year, month):
         
     
 
-    absence_deduction = Decimal(absent_days) * absent_penalty
+    # absence_deduction = Decimal(absent_days) * absent_penalty
 
     gross_salary = base_salary + overtime_pay
 
     net_salary = max(
         Decimal("0.00"),
-        gross_salary - late_deduction - absence_deduction
+        gross_salary - late_deduction
     )
 
     
@@ -178,15 +178,15 @@ def generate_salary(user, year, month):
         "period": str(period),
         "shift":shift_obj.name if shift_obj else "Default",
         "hourly_rate": float(hourly_rate),
-        "shift_hours": round(shift_hours),
-        "absent_penalty_per_day": float(absent_penalty),
+        # "shift_hours": round(shift_hours),
+        # "absent_penalty_per_day": float(absent_penalty),
         "total_hours": round(float(total_hours), 2),
         "overtime_hours": float(total_overtime),
         "absent_days": absent_days,
         "late_minutes": total_late,
         "gross_pay": float(gross_salary),
         "late_deduction": float(late_deduction),
-        "absense_deduction": float(absence_deduction),
+        # "absense_deduction": float(absence_deduction),
         "net_pay": round(float(net_salary), 2)
     }
 
