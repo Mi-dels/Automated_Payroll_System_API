@@ -63,13 +63,13 @@ def generate_salary(user, year, month):
     late_penalty_per_minute = (
         shift_obj.late_penalty_per_minute
         if shift_obj and shift_obj.late_penalty_per_minute
-        else config.default_late_penalty_per_minute
+        else config.late_penalty_per_minute
     )
     
     overtime_multiplier = (
         Decimal(str(shift_obj.overtime_rate_multiplier))
         if shift_obj and shift_obj.overtime_rate_multiplier
-        else Decimal(str(config.default_overtime_rate_multiplier))
+        else Decimal(str(config.overtime_rate_multiplier))
     )
 
 
